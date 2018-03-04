@@ -12,6 +12,8 @@ module.exports = new BaseKonnector(start)
 
 function start (fields) {
 
+  /* global variables */
+  const albumsData = []
 
   /* AUTHENTIFICATION */
   return request({
@@ -43,6 +45,13 @@ function start (fields) {
     return request(albumUrl)
     .then($=>{
       console.log('loop', albumUrl)
+      const albumData = {
+        date:$($('culturel')[0]).text(),
+        title: $($('.testmonial-grid>p')[0]).text(),
+        text : trim($($('.gridbig2')).text())
+      }
+      albumsData.push(albumData)
+      console.log(albumData);
       const imagesUrl = []
       $('#bxslider').find('a').each((i,elm)=>{
         const imgUrl = $(elm).attr('href')
@@ -71,6 +80,23 @@ function start (fields) {
         fs.writeFileSync('./photo/'+localFilename,resp.body)
       })
     })
+
+    .then(()=>{
+      console.log(albumsData);
+      const beautify = require('json-beautify')
+      const output = beautify(albumsData,null, 2, 80)
+      // const output = JSON.stringify(albumsData)
+      console.log(output);
+      fs.writeFileSync('./photo/'+'Récits de chaque Jour.txt', output )
+    })
+
   })
   .catch(console.log)
+}
+
+// helper
+function trim(txt) {
+  txt = txt.replace(/\n\s+/,'\n')
+  txt = txt.replace(/\n+/g,'\n')
+  return txt.replace(/\t+/g,'\t')
 }

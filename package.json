@@ -12,6 +12,7 @@
   "dependencies": {
     "cozy-konnector-libs": "^3.0.0",
     "standard": "^10.0.3",
+    "json-beautify": "^1.0.1",
     "moment": "^2.21.0"
   },
   "scripts": {
